@@ -7,82 +7,84 @@
 #include<Windows.h>
 using namespace std;
 
+queue<int> Q;
 
-
-struct struck_queu
-{
-	int nomber;  // полезная информация
-	struct struck_queu* next; // ссылка на следующий элемент 
+struct spisok_soed {
+	int vershina;
+	struct spisok_soed* next;
 };
-struct struck_queu* head_Q, * last_Q;
 
+struct spisok_soed* creation_element(int nomber) {
 
-struct spisok_soed* spis;
+	struct spisok_soed* p = NULL;
 
-
-
-struct struck_queu* get_ochered(int g)
-{
-	struct struck_queu* p = NULL;
-	char s[256];
-	if ((p = (struck_queu*)malloc(sizeof(struct struck_queu))) == NULL)  // выделяем память под новый элемент списка
+	if ((p = (spisok_soed*)malloc(sizeof(struct spisok_soed))) == NULL) // выделяем память под новый элемент списка
 	{
 		printf("Ошибка при распределении памяти\n");
 		exit(1);
 	}
 
-	if (s == 0)
-	{
-		printf("Запись не была произведена\n");
-		return NULL;
-	}
-	p->nomber = g;
-
+	p->vershina = nomber;
 	p->next = NULL;
 
-	return p;		// возвращаем указатель на созданный элемент
+	return p;
 }
 
-void push(int g) {
-	struct struck_queu* q;
-	q = get_ochered(g);
-	if (head_Q == NULL) {
-		head_Q = q;
-		last_Q = q;
-	}
-	else {
-		last_Q->next = q;
-		last_Q = q;
-	}
-}
+struct spisok_soed* spis;
 
-int pop(void) {
-	struct struck_queu* head_struc = head_Q;
-	int i;
-	if (head_Q == NULL)
-	{
-		printf("Список пуст\n");
-	}
+void creation_spisok(int** M, int size) {
+	struct spisok_soed* q, * save = NULL;
+	for (int i = 0; i < size; i++) {
+		spis[i].next = NULL;
+		spis[i].vershina = i;
+		for (int j = 0; j < size; j++) {
+			if (M[i][j] == 1) {
+				q = creation_element(j);
 
-	i = head_Q->nomber;
-	head_Q = head_Q->next;
-	delete head_struc;
-	return i;
-}
-
-
-
-void BFS_svoi(int v, bool* NUM, int size, int** G) {
-	push(v);
-	NUM[v] = TRUE;
-	while (head_Q != NULL) {
-		v = pop();
-		cout << v << " ";
-		for (int i = 1; i < size;i++) {
-			if (G[v][i] == 1 && NUM[i] == FALSE) {
-				push(i);
-				NUM[i] = TRUE;
+				if (spis[i].next == NULL) {
+					spis[i].next = q;
+					save = q;
+				}
+				else {
+					save->next = q;
+					save = q;
+				}
 			}
+		}
+	}
+}
+
+void review(int size) {
+	struct spisok_soed* save;
+	cout << "\n";
+	for (int i = 0; i < size; i++) {
+		save = spis[i].next;
+		cout << "[" << spis[i].vershina << "]";
+		while (save != NULL) {
+			cout << " -> " << save->vershina;
+			save = save->next;
+		}
+		cout << "\n";
+	}
+	cout << "\n";
+
+}
+
+void BFS_spisok(int v, bool* NUM, struct spisok_soed* spis) {
+	struct spisok_soed* save;
+	Q.push(v);
+	NUM[v] = TRUE;
+	while (!Q.empty()) {
+		v = Q.front();
+		Q.pop();
+		save = spis[v].next;
+		cout << v << " ";
+		while (save != NULL) {
+			if (NUM[save->vershina] == FALSE) {
+				Q.push(save->vershina);
+				NUM[save->vershina] = TRUE;
+			}
+			save = save->next;
 		}
 	}
 }
@@ -92,17 +94,19 @@ int main() {
 	setlocale(LC_ALL, "Rus");
 	srand(time(NULL));
 	int** G, size, vershina;
-	bool* NUM_svoi;
+	bool * NUM_spisok;
 	clock_t start, end;
 	double time;
 	cout << " Матрица смежности \n \n Введите количество вершин графа: ";
 	cin >> size;
 
+	spis = new struct spisok_soed[size];
 	G = new int* [size]; // создаём двумерный массив 
-	NUM_svoi = new bool[size];
+	NUM_spisok = new bool[size];
 	for (int i = 0; i < size; i++) {
 		G[i] = new int[size];
-		NUM_svoi[i] = FALSE;
+		NUM_spisok[i] = FALSE;
+
 	}
 
 
@@ -114,7 +118,6 @@ int main() {
 				G[j][i] = G[i][j];
 			}
 		}
-
 	}
 
 
@@ -124,15 +127,19 @@ int main() {
 		}
 		cout << "\n";
 	}
-	
-	cout << "Обход в ширину через: \n\n Cвою очередь: ";
+
+	creation_spisok(G, size);
+	review(size);
+
+
+	cout << "\n Обход в ширину списка: ";
 
 	start = clock();
-	BFS_svoi(0, NUM_svoi, size, G);
+	BFS_spisok(0, NUM_spisok, spis);
 	end = clock();
 	time = (double)(end - start) / CLOCKS_PER_SEC;
-
 	cout << "\n Время работы - " << time << "\n";
+
 
 	system("pause");
 	return 0;
