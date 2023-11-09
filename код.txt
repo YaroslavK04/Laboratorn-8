@@ -16,17 +16,17 @@ struct spisok_soed {
 
 struct struck_queu
 {
-	int nomber;  // полезная информация
-	struct struck_queu* next; // ссылка на следующий элемент 
+	int nomber;  // РїРѕР»РµР·РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ
+	struct struck_queu* next; // СЃСЃС‹Р»РєР° РЅР° СЃР»РµРґСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚ 
 };
 struct struck_queu* head_Q, * last_Q;
 struct spisok_soed* creation_element(int nomber) {
 
 	struct spisok_soed* p = NULL;
 
-	if ((p = (spisok_soed*)malloc(sizeof(struct spisok_soed))) == NULL) // выделяем память под новый элемент списка
+	if ((p = (spisok_soed*)malloc(sizeof(struct spisok_soed))) == NULL) // РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР°
 	{
-		printf("Ошибка при распределении памяти\n");
+		printf("РћС€РёР±РєР° РїСЂРё СЂР°СЃРїСЂРµРґРµР»РµРЅРёРё РїР°РјСЏС‚Рё\n");
 		exit(1);
 	}
 
@@ -83,22 +83,22 @@ struct struck_queu* get_ochered(int g)
 {
 	struct struck_queu* p = NULL;
 	char s[256];
-	if ((p = (struck_queu*)malloc(sizeof(struct struck_queu))) == NULL)  // выделяем память под новый элемент списка
+	if ((p = (struck_queu*)malloc(sizeof(struct struck_queu))) == NULL)  // РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР°
 	{
-		printf("Ошибка при распределении памяти\n");
+		printf("РћС€РёР±РєР° РїСЂРё СЂР°СЃРїСЂРµРґРµР»РµРЅРёРё РїР°РјСЏС‚Рё\n");
 		exit(1);
 	}
 
 	if (s == 0)
 	{
-		printf("Запись не была произведена\n");
+		printf("Р—Р°РїРёСЃСЊ РЅРµ Р±С‹Р»Р° РїСЂРѕРёР·РІРµРґРµРЅР°\n");
 		return NULL;
 	}
 	p->nomber = g;
 
 	p->next = NULL;
 
-	return p;		// возвращаем указатель на созданный элемент
+	return p;		// РІРѕР·РІСЂР°С‰Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃРѕР·РґР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚
 }
 
 void push(int g) {
@@ -119,7 +119,7 @@ int pop(void) {
 	int i;
 	if (head_Q == NULL)
 	{
-		printf("Список пуст\n");
+		printf("РЎРїРёСЃРѕРє РїСѓСЃС‚\n");
 	}
 
 	i = head_Q->nomber;
@@ -186,11 +186,11 @@ int main() {
 	bool* NUM, * NUM_svoi, * NUM_spisok;
 	clock_t start, end;
 	double time;
-	cout << " Матрица смежности \n \n Введите количество вершин графа: ";
+	cout << " РњР°С‚СЂРёС†Р° СЃРјРµР¶РЅРѕСЃС‚Рё \n \n Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РІРµСЂС€РёРЅ РіСЂР°С„Р°: ";
 	cin >> size;
 
 	spis = new struct spisok_soed[size];
-	G = new int* [size]; // создаём двумерный массив 
+	G = new int* [size]; // СЃРѕР·РґР°С‘Рј РґРІСѓРјРµСЂРЅС‹Р№ РјР°СЃСЃРёРІ 
 	NUM = new bool[size];
 	NUM_svoi = new bool[size];
 	NUM_spisok = new bool[size];
@@ -225,27 +225,27 @@ int main() {
 	creation_spisok(G, size);
 	review(size);
 
-	cout << "Обход в ширину через: \n\n Очередь из библиотеки: ";
+	cout << "РћР±С…РѕРґ РІ С€РёСЂРёРЅСѓ С‡РµСЂРµР·: \n\n РћС‡РµСЂРµРґСЊ РёР· Р±РёР±Р»РёРѕС‚РµРєРё: ";
 
 	start = clock();
 	BFS(0, NUM, size, G);
 	end = clock();
 	time = (double)(end - start) / CLOCKS_PER_SEC;
 
-	cout << "\n Время работы - " << time << "\n\n Cвоя очередь: ";
+	cout << "\n Р’СЂРµРјСЏ СЂР°Р±РѕС‚С‹ - " << time << "\n\n CРІРѕСЏ РѕС‡РµСЂРµРґСЊ: ";
 
 	start = clock();
 	BFS_svoi(0, NUM_svoi, size, G);
 	end = clock();
 	time = (double)(end - start) / CLOCKS_PER_SEC;
 
-	cout << "\n Время работы - " << time << "\n\n Обход в ширину списка: ";
+	cout << "\n Р’СЂРµРјСЏ СЂР°Р±РѕС‚С‹ - " << time << "\n\n РћР±С…РѕРґ РІ С€РёСЂРёРЅСѓ СЃРїРёСЃРєР°: ";
 
 	start = clock();
 	BFS_spisok(0, NUM_spisok, spis);
 	end = clock();
 	time = (double)(end - start) / CLOCKS_PER_SEC;
-	cout << "\n Время работы - " << time << "\n";
+	cout << "\n Р’СЂРµРјСЏ СЂР°Р±РѕС‚С‹ - " << time << "\n";
 
 
 	system("pause");
